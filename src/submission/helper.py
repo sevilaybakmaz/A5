@@ -22,7 +22,9 @@ def initialize_perceiver_model(mconf, bottleneck_dim=32):
     attention_model = None
     ### TODO
     ### [part g]: Make some other model here
-
+    #mconf.perceiver = True
+    #mconf.bottleneck_dim = args.bottleneck_dim
+    #model = model.GPT(mconf).to(device)
     ### START CODE HERE
     ### END CODE HERE
     return attention_model
@@ -124,5 +126,7 @@ def train(model, writing_params_path, trainer_obj):
     ### Note: trainer_obj is of type Trainer (see trainer.py for more details)
 
     ### START CODE HERE
+    trainer_obj.train()
+    torch.save(model.state_dict(), writing_params_path)
     ### END CODE HERE
     return
