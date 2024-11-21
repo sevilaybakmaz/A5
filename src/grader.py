@@ -18,7 +18,8 @@ import submission
 # CONSTANTS
 # ----------
 BLOCK_SIZE = 128
-PRETRAIN_CORPUS_PATH = './data/wiki.txt'
+#PRETRAIN_CORPUS_PATH = './data/wiki.txt'
+PRETRAIN_CORPUS_PATH = '/Users/sevilay/XCS224N-A5/src/data/wiki.txt'
 PRETRAIN_TEXT = open(PRETRAIN_CORPUS_PATH, encoding='utf-8').read()
 
 def score_preds(preds_fn, answers_fn):

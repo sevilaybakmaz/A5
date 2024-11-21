@@ -12,6 +12,9 @@ def initialize_vanilla_model(mconf):
     ### [part c]: Make some model here
 
     ### START CODE HERE
+    #model = model.GPT(mconf).to(device)
+    attention_model = GPT(mconf)
+    return attention_model
     ### END CODE HERE
     return attention_model
 
@@ -60,8 +63,33 @@ def finetune(reading_params_path, finetune_corpus_path, pretrain_dataset, block_
     trainer_obj = None #Trainer object (see trainer.py for more details)
     tconf = None #TrainerConfig object (see trainer.py for more details)
     ### START CODE HERE
-    ### END CODE HERE
+    if reading_params_path:
+
+        # With pretraining.
+        model.load_state_dict(torch.load(reading_params_path, map_location=torch.device('cpu'),weights_only=True))
+        tconf = TrainerConfig(max_epochs=10, 
+                              batch_size=256, 
+                              learning_rate=6e-4,
+                              lr_decay=True, 
+                              warmup_tokens=512*20, 
+                              final_tokens=200*len(pretrain_dataset)*block_size,
+                              num_workers=4)
+    else:
+        
+        # Without pretraining.
+        tconf = TrainerConfig(max_epochs=75,
+                            batch_size=256,
+                            learning_rate=6e-4,
+                            lr_decay=True,
+                            warmup_tokens=512*20,
+                            final_tokens=200*len(pretrain_dataset)*block_size,
+                            num_workers=4)
+    name_dataset = NameDataset(open(finetune_corpus_path, encoding='utf-8').read(), pretrain_dataset)
+    trainer_obj = Trainer(model, name_dataset, None, tconf)
+    
     return tconf, trainer_obj
+    ### END CODE HERE
+    #return tconf, trainer_obj
 
 def pretrain(pretrain_dataset, block_size, model, pretrain_lr=6e-3, writer=None):
     ### TODO:
