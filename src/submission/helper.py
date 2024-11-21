@@ -22,10 +22,11 @@ def initialize_perceiver_model(mconf, bottleneck_dim=32):
     attention_model = None
     ### TODO
     ### [part g]: Make some other model here
-    #mconf.perceiver = True
-    #mconf.bottleneck_dim = args.bottleneck_dim
-    #model = model.GPT(mconf).to(device)
+    
     ### START CODE HERE
+    mconf.perceiver = True
+    mconf.bottleneck_dim = args.bottleneck_dim
+    attention_model = GPT(mconf)
     ### END CODE HERE
     return attention_model
 
@@ -114,6 +115,15 @@ def pretrain(pretrain_dataset, block_size, model, pretrain_lr=6e-3, writer=None)
     tconf = None #TrainerConfig object (see trainer.py for more details)
 
     ### START CODE HERE
+
+
+    tconf = TrainerConfig(max_epochs=650, batch_size=128, learning_rate=6e-3,
+                    lr_decay=True, warmup_tokens=512 * 20, final_token=200 * len(pretrain_dataset) * block_size,
+                    num_workers=4)
+    trainer_obj = Trainer(model, pretrain_dataset, None, tconf)
+
+    
+    
     ### END CODE HERE
     return tconf, trainer_obj
 
